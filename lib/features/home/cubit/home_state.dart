@@ -4,10 +4,10 @@ class HomeState {
   HomeState({
     this.status = Status.initial,
     this.errorMessage,
-    this.weatherModel,
+    this.model,
   });
 
   final Status status;
   final String? errorMessage;
-  final WeatherModel? weatherModel;
+  final WeatherModel? model;
 }
