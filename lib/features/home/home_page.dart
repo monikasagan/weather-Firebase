@@ -1,52 +1,127 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather/app/core/enums.dart';
+import 'package:weather/domain/models/weather_model.dart';
+import 'package:weather/domain/repositories/weather_repository.dart';
+import 'package:weather/features/home/cubit/home_cubit.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Weather app'),
+    return BlocProvider(
+      create: (context) => HomeCubit(WeatherRepository()),
+      child: BlocListener<HomeCubit, HomeState>(
+        listener: (context, state) {
+          if (state.status == Status.error) {
+            final errorMessage = state.errorMessage ?? 'Unkown error';
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(errorMessage),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+        child: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            final weatherModel = state.model;
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Temperature'),
+              ),
+              body: Center(
+                child: Builder(builder: (context) {
+                  if (state.status == Status.loading) {
+                    return const CircularProgressIndicator(
+                      color: Colors.purple,
+                    );
+                  }
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (weatherModel != null)
+                        _DisplayWeatherWidget(
+                          weatherModel: weatherModel,
+                        ),
+                      _SearchWidget(),
+                    ],
+                  );
+                }),
+              ),
+            );
+          },
+        ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    );
+  }
+}
+
+class _DisplayWeatherWidget extends StatelessWidget {
+  const _DisplayWeatherWidget({
+    Key? key,
+    required this.weatherModel,
+  }) : super(key: key);
+
+  final WeatherModel weatherModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        return Column(
           children: [
-            const Text(
-              '15',
-              style: TextStyle(fontSize: 80),
+            Text(
+              weatherModel.temperature.toString(),
+              style: Theme.of(context).textTheme.headline1,
             ),
-            const Text(
-              'Warsaw',
-              style: TextStyle(fontSize: 40),
+            const SizedBox(height: 60),
+            Text(
+              weatherModel.city,
+              style: Theme.of(context).textTheme.headline2,
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 30.0),
-              child: TextField(
-                decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.purple),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                    ),
-                    filled: true,
-                    hintText: "Warsaw"),
+            const SizedBox(height: 60),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _SearchWidget extends StatelessWidget {
+  _SearchWidget({
+    Key? key,
+  }) : super(key: key);
+
+  final _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                label: Text('City'),
+                hintText: 'London',
               ),
             ),
-            const SizedBox(
-              height: 25,
-            ),
-            ElevatedButton(
-              style: const ButtonStyle(),
-              onPressed: () {},
-              child: const Text('get weather'),
-            )
-          ],
-        ),
+          ),
+          const SizedBox(width: 20),
+          ElevatedButton(
+            onPressed: () {
+              context.read<HomeCubit>().getWeatherModel(city: _controller.text);
+            },
+            child: const Text('Get'),
+          ),
+        ],
       ),
     );
   }
