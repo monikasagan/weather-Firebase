@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "61660925004",
+    "project_id": "app-for-work200609",
+    "storage_bucket": "app-for-work200609.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61660925004:android:df847c3242ad52017738e9",
+        "android_client_info": {
+          "package_name": "com.msagan.weather"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61660925004-7j8f78qrik5smh5p3io1pjd0l2isvbed.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5q9CDR9Hmh3VRJB5XqpU2QMrWrsRZnE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61660925004-7j8f78qrik5smh5p3io1pjd0l2isvbed.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "61660925004-3ggm7k7g85611tf89knjgcrfmdl08a3l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterApplication"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
