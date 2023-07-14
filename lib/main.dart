@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:weather/features/home/home_page.dart';
 import 'package:weather/firebase_options.dart';
 
 void main() async {
@@ -18,9 +19,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.yellow,
+        useMaterial3: true,
       ),
-      home: const Scaffold(),
+      home: const HomePage(),
     );
   }
 }
