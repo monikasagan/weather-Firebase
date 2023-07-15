@@ -14,7 +14,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeCubit(WeatherRepository(WeatherRemoteDataSource())),
+      create: (context) =>
+          HomeCubit(WeatherRepository(WeatherRemoteDataSource())),
       child: BlocListener<HomeCubit, HomeState>(
         listener: (context, state) {
           if (state.status == Status.error) {
@@ -77,14 +78,22 @@ class _DisplayWeatherWidget extends StatelessWidget {
           children: [
             Text(
               weatherModel.temperature.toString(),
-              style: Theme.of(context).textTheme.headline1,
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
-            const SizedBox(height: 60),
             Text(
               weatherModel.city,
-              style: Theme.of(context).textTheme.headline2,
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
-            const SizedBox(height: 60),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('country:${weatherModel.country}'),
+                const SizedBox(
+                  width: 20,
+                ),
+                Text('condition: ${weatherModel.condition}'),
+              ],
+            ),
           ],
         );
       },
