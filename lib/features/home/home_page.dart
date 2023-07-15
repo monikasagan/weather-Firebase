@@ -14,9 +14,12 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          HomeCubit(WeatherRepository(WeatherRemoteDataSource())),
-      child: BlocListener<HomeCubit, HomeState>(
+      create: (context) => HomeCubit(
+        WeatherRepository(
+          WeatherRemoteDataSource(),
+        ),
+      ),
+      child: BlocConsumer<HomeCubit, HomeState>(
         listener: (context, state) {
           if (state.status == Status.error) {
             final errorMessage = state.errorMessage ?? 'Unkown error';
@@ -28,35 +31,33 @@ class HomePage extends StatelessWidget {
             );
           }
         },
-        child: BlocBuilder<HomeCubit, HomeState>(
-          builder: (context, state) {
-            final weatherModel = state.model;
-            return Scaffold(
-              appBar: AppBar(
-                title: const Text('Temperature'),
-              ),
-              body: Center(
-                child: Builder(builder: (context) {
-                  if (state.status == Status.loading) {
-                    return const CircularProgressIndicator(
-                      color: Colors.purple,
-                    );
-                  }
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (weatherModel != null)
-                        _DisplayWeatherWidget(
-                          weatherModel: weatherModel,
-                        ),
-                      _SearchWidget(),
-                    ],
+        builder: (context, state) {
+          final weatherModel = state.model;
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Temperature'),
+            ),
+            body: Center(
+              child: Builder(builder: (context) {
+                if (state.status == Status.loading) {
+                  return const CircularProgressIndicator(
+                    color: Colors.purple,
                   );
-                }),
-              ),
-            );
-          },
-        ),
+                }
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (weatherModel != null)
+                      _DisplayWeatherWidget(
+                        weatherModel: weatherModel,
+                      ),
+                    _SearchWidget(),
+                  ],
+                );
+              }),
+            ),
+          );
+        },
       ),
     );
   }
@@ -74,27 +75,30 @@ class _DisplayWeatherWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
-        return Column(
-          children: [
-            Text(
-              weatherModel.temperature.toString(),
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
-            Text(
-              weatherModel.city,
-              style: Theme.of(context).textTheme.headlineLarge,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('country:${weatherModel.country}'),
-                const SizedBox(
-                  width: 20,
-                ),
-                Text('condition: ${weatherModel.condition}'),
-              ],
-            ),
-          ],
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(
+                weatherModel.temperature.toString(),
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+              Text(
+                weatherModel.city,
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('country:${weatherModel.country}'),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Text('condition: ${weatherModel.condition}'),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );
