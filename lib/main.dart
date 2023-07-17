@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:weather/app/injection_container.dart';
 import 'package:weather/features/home/home_page.dart';
 import 'package:weather/firebase_options.dart';
 
 void main() async {
+  configureDependencies();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
